@@ -36,6 +36,7 @@
         min-height: 100vh;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
           "Segoe UI", sans-serif;
+        font-size: 12px;
         background: radial-gradient(circle at top, #1d283a 0, #020617 55%, #000 100%);
         color: var(--text);
         display: flex;
@@ -150,11 +151,8 @@
     <div class="app-shell space-y-4">
       <header class="space-y-1">
         <p class="text-[10px] uppercase tracking-[0.35em] text-slate-400">
-          Escape Tsunami · Roblox
+          EscapeLabs
         </p>
-        <h1 class="text-xl md:text-2xl font-semibold text-slate-50">
-          Brainrot calculators
-        </h1>
         <p class="text-[11px] md:text-xs text-slate-300 max-w-2xl">
           Creator:
           <a
@@ -162,11 +160,13 @@
             target="_blank"
             rel="noopener noreferrer"
             class="text-slate-100 underline decoration-slate-500/60 underline-offset-2 hover:text-white hover:decoration-slate-300"
-            >Escape (ESCAPEMETA)</a
-          >
+            >Escape (ESCAPEMETA)</a>
           · Last updated:
           <span class="text-slate-100">13/03/2026</span>
         </p>
+        <h1 class="text-xl md:text-2xl font-semibold text-slate-50" style="display:none;">
+          EscapeLabs: Calculators & Tools
+        </h1>
       </header>
 
       <div
@@ -202,7 +202,7 @@
                   Brainrot Income Calculator
                 </h2>
                 <p class="text-[11px] text-slate-400">
-                  Compute in‑game income from level, size, mutation, traits, and Star.
+                  Calculate your brainrot's total income depending on level and multipliers (size, mutation, traits, and star)
                 </p>
               </div>
               <span
@@ -237,7 +237,7 @@
                 </p>
               </div>
 
-              <div class="grid grid-cols-2 gap-3">
+              <div class="grid">
                 <div>
                   <label
                     for="income-level-input"
@@ -255,6 +255,9 @@
                     Supports levels 1–300
                   </p>
                 </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
                 <div>
                   <label
                     for="income-size-select"
@@ -265,30 +268,28 @@
                     <option value="">Loading sizes...</option>
                   </select>
                   <p class="text-[10px] text-slate-500 mt-0.5">
-                    Pick a named size or leave blank.
+                    Pick a size or override with a custom size
                   </p>
                 </div>
-              </div>
-
-              <div>
-                <label
-                  for="income-custom-size-input"
-                  class="block text-xs text-slate-300 mb-1"
-                  >Custom size (optional)</label
-                >
-                <input
-                  id="income-custom-size-input"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="e.g. 1.32"
-                  class="bg-slate-900 text-slate-100 border-slate-600 rounded-md px-2 py-1 text-xs border w-full"
-                />
-                <p class="text-[10px] text-slate-500 mt-0.5">
-                  If provided, this exact size is used instead of the named size (multipliers are capped at
-                  2.00).
-                </p>
-              </div>
+                <div>                
+                  <label
+                    for="income-custom-size-input"
+                    class="block text-xs text-slate-300 mb-1"
+                    >Custom size (optional)</label
+                  >
+                  <input
+                    id="income-custom-size-input"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="e.g. 1.32"
+                    class="bg-slate-900 text-slate-100 border-slate-600 rounded-md px-2 py-1 text-xs border w-full"
+                  />
+                  <p class="text-[10px] text-slate-500 mt-0.5">
+                    Size multiplier is capped at 2.00x
+                  </p>
+                </div>
+              </div>              
             </div>
 
             <div class="mt-4 space-y-3">
@@ -306,7 +307,7 @@
                     <option value="">Loading...</option>
                   </select>
                   <p class="text-[10px] text-slate-500 mt-0.5">
-                    Uses in‑game mutation multipliers.
+                    Select a mutation
                   </p>
                 </div>
                 <div class="flex flex-col gap-1">
@@ -477,9 +478,12 @@
                 </div>
               </div>
 
-              <p class="text-[10px] text-slate-400 pt-1 border-t border-slate-800/60" style="color:yellow">
-                ⚠️ Due to the size multiplier cap, we are unable to calculate true size for brainrots larger than 2x or less than 0.25x
-              </p>
+              <!--
+                <p class="text-[10px] text-slate-400 pt-1 border-t border-slate-800/60" style="color:yellow">
+                  WARNING MESSAGES HERE.
+                </p>
+              -->
+
             </div>
           </div>
         </div>
@@ -500,7 +504,7 @@
                 Brainrot Size Calculator
               </h2>
               <p class="text-[11px] text-slate-400">
-                Recover your true size (4dp) from a displayed in‑game income.
+                Calculate your brainrot's true size <span style="color:#ff0000">(only for brainrots with size between 0.25x and 2x)</span>
               </p>
             </div>
           </div>
@@ -675,7 +679,7 @@
                 <div class="flex items-center justify-between">
                   <span
                     class="text-slate-400 uppercase tracking-[0.2em] text-[10px]"
-                    >Estimated size</span
+                    >Estimated size multiplier and size</span
                   >
                   <span id="size-name" class="text-[11px] text-slate-300"></span>
                 </div>
@@ -684,12 +688,14 @@
                   <span class="text-[11px] font-medium text-slate-400">x</span>
                 </div>
                 <div id="size-alt" class="text-[11px] text-slate-400"></div>
+            <!--
                 <p
                   class="text-[10px] text-slate-500 pt-1 border-t border-slate-800/60"
-                  style="color: yellow"
+                  style="color: #8feaff"
                 >
-                ⚠️ Due to the size multiplier cap, we are unable to calculate true size for brainrots larger than 2x or less than 0.25x
+                WARNING MESSAGES HERE.
                 </p>
+            -->
               </div>
             </div>
           </div>
@@ -1953,7 +1959,7 @@
 
         // Sizes
         sizeSelect.innerHTML =
-          '<option value="">Select size (default = 1x)</option>';
+          '<option value="">Default (Non Sized)</option>';
         for (const size of sizesData) {
           const opt = document.createElement("option");
           opt.value = size.name;
