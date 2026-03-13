@@ -208,8 +208,8 @@
               <span
                 class="inline-flex items-center gap-1 rounded-full border border-emerald-400/70 bg-emerald-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-200"
               >
-                <span class="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_0_4px_rgba(34,197,94,0.35)]"></span>
-                Sheet-accurate
+                <span class="h-2 w-2 mx-2 rounded-full bg-emerald-400 shadow-[0_0_0_4px_rgba(34,197,94,0.35)]"></span>
+                Based on Community Size Chart
               </span>
             </div>
 
@@ -248,11 +248,11 @@
                     id="income-level-input"
                     type="number"
                     min="1"
-                    max="275"
+                    max="300"
                     value="1"
                   />
                   <p class="text-[10px] text-slate-500 mt-0.5">
-                    Supports levels 1–275 (incl. post‑202 additive logic).
+                    Supports levels 1–300
                   </p>
                 </div>
                 <div>
@@ -539,12 +539,12 @@
                     id="size-level-input"
                     type="number"
                     min="1"
-                    max="275"
+                    max="300"
                     value="1"
                     class="w-full rounded-md border border-slate-600 bg-slate-950 px-2 py-1 text-xs text-slate-100"
                   />
                   <p class="text-[10px] text-slate-500 mt-0.5">
-                    1–275 (post‑202 additive logic supported).
+                    1–300
                   </p>
                 </div>
                 <div>
@@ -1725,7 +1725,7 @@
   {
     "type": "additive_diff",
     "start_level": 202,
-    "end_level": 275
+    "end_level": 300
   }
 ];
 
@@ -1764,7 +1764,7 @@
 
       function computeLevelIncome(baseIncome, level) {
         if (!Number.isFinite(baseIncome) || baseIncome <= 0) return 0;
-        const maxLevel = Math.max(1, Math.min(level, 275));
+        const maxLevel = Math.max(1, Math.min(level, 300));
         const income = [];
         income[1] = baseIncome;
 
@@ -2032,9 +2032,9 @@
           }
 
           let level = Number(levelInput.value);
-          if (!Number.isFinite(level) || level < 1 || level > 275) {
+          if (!Number.isFinite(level) || level < 1 || level > 300) {
             errorBox.classList.remove("hidden");
-            errorBox.textContent = "Level must be between 1 and 275.";
+            errorBox.textContent = "Level must be between 1 and 300.";
             return;
           }
           level = Math.floor(level);
@@ -2316,9 +2316,9 @@
           }
 
           let level = Number(levelInput.value);
-          if (!Number.isFinite(level) || level < 1 || level > 275) {
+          if (!Number.isFinite(level) || level < 1 || level > 300) {
             errorBox.classList.remove("hidden");
-            errorBox.textContent = "Level must be between 1 and 275.";
+            errorBox.textContent = "Level must be between 1 and 300.";
             return;
           }
           level = Math.floor(level);
