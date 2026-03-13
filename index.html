@@ -1,0 +1,2517 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Escape Tsunami Brainrot Tools</title>
+    <meta
+      name="description"
+      content="Single-file static calculators for Escape Tsunami (Roblox): Brainrot Income and Brainrot Size calculators with all data embedded."
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        --bg: #050816;
+        --bg-alt: #0b1020;
+        --border: #252b3b;
+        --accent: #38bdf8;
+        --accent-soft: rgba(56, 189, 248, 0.16);
+        --danger: #f97373;
+        --text: #e5e7eb;
+        --text-muted: #9ca3af;
+        --input-bg: #020617;
+        --radius-lg: 14px;
+        --radius-md: 10px;
+        --radius-pill: 999px;
+        --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.55);
+        --shadow-subtle: 0 10px 30px rgba(15, 23, 42, 0.45);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+          "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top, #1d283a 0, #020617 55%, #000 100%);
+        color: var(--text);
+        display: flex;
+        justify-content: center;
+        padding: 24px 16px;
+      }
+
+      .tab-active {
+        background: radial-gradient(circle at 0 0, #38bdf8, #4f46e5);
+        color: #0b1120;
+        box-shadow: 0 14px 28px rgba(56, 189, 248, 0.55);
+      }
+
+      .tab-inactive {
+        background: rgba(15, 23, 42, 0.9);
+        color: #e5e7eb;
+        border-color: rgba(148, 163, 184, 0.6);
+      }
+
+      .app-shell {
+        width: 100%;
+        max-width: 1120px;
+        background: linear-gradient(
+          135deg,
+          rgba(15, 23, 42, 0.94),
+          rgba(15, 23, 42, 0.98)
+        );
+        border-radius: 24px;
+        box-shadow: var(--shadow-soft);
+        border: 1px solid rgba(148, 163, 184, 0.16);
+        padding: 18px 18px 16px;
+      }
+
+      @media (max-width: 880px) {
+        body {
+          padding: 12px 10px;
+        }
+        .app-shell {
+          padding: 14px;
+        }
+      }
+
+      /* Reuse original calculator styles where useful */
+      .income-app {
+        width: 100%;
+        display: grid;
+        grid-template-columns: minmax(0, 3fr) minmax(0, 2.5fr);
+        gap: 18px;
+      }
+      @media (max-width: 880px) {
+        .income-app {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+      .income-pane {
+        padding: 16px 16px 12px;
+      }
+      .income-pane--right {
+        background: radial-gradient(
+            circle at 0 0,
+            rgba(56, 189, 248, 0.18),
+            transparent 55%
+          ),
+          radial-gradient(
+            circle at 100% 100%,
+            rgba(129, 140, 248, 0.22),
+            transparent 60%
+          ),
+          var(--bg-alt);
+        border-left: 1px solid rgba(148, 163, 184, 0.24);
+        border-radius: 18px;
+      }
+      .card {
+        border-radius: var(--radius-lg);
+        background: radial-gradient(
+          circle at 0 0,
+          rgba(15, 23, 42, 0.7),
+          rgba(15, 23, 42, 0.95)
+        );
+        border: 1px solid var(--border);
+        padding: 12px 12px 10px;
+        box-shadow: var(--shadow-subtle);
+      }
+      select,
+      input[type="number"] {
+        width: 100%;
+        padding: 7px 9px;
+        border-radius: var(--radius-md);
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        background-color: var(--input-bg);
+        color: var(--text);
+        font-size: 0.8rem;
+        outline: none;
+      }
+      select:focus,
+      input[type="number"]:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.7);
+      }
+      input[type="number"]::-webkit-outer-spin-button,
+      input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      input[type="number"] {
+        appearance: textfield;
+        -moz-appearance: textfield;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell space-y-4">
+      <header class="space-y-1">
+        <p class="text-[10px] uppercase tracking-[0.35em] text-slate-400">
+          Escape Tsunami · Roblox
+        </p>
+        <h1 class="text-xl md:text-2xl font-semibold text-slate-50">
+          Brainrot calculators
+        </h1>
+        <p class="text-[11px] md:text-xs text-slate-300 max-w-2xl">
+          This single file contains both calculators and all JSON data. You can open it
+          directly, or drop it into GitHub Pages without any build step.
+        </p>
+      </header>
+
+      <div
+        class="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900/90 p-1 text-xs"
+        role="tablist"
+      >
+        <button
+          id="tab-income"
+          role="tab"
+          aria-selected="true"
+          class="tab-active inline-flex items-center gap-1 rounded-full px-4 py-1.5 font-semibold uppercase tracking-wide border border-transparent text-[11px]"
+          data-target="panel-income"
+        >
+          Income calculator
+        </button>
+        <button
+          id="tab-size"
+          role="tab"
+          aria-selected="false"
+          class="tab-inactive inline-flex items-center gap-1 rounded-full px-4 py-1.5 font-semibold uppercase tracking-wide border text-[11px]"
+          data-target="panel-size"
+        >
+          Size calculator
+        </button>
+      </div>
+
+      <div id="panel-income" role="tabpanel" aria-labelledby="tab-income">
+        <div class="income-app mt-2">
+          <div class="income-pane">
+            <div class="flex items-center justify-between mb-3 gap-3">
+              <div>
+                <h2 class="text-sm md:text-base font-semibold">
+                  Brainrot Income Calculator
+                </h2>
+                <p class="text-[11px] text-slate-400">
+                  Compute in‑game income from level, size, mutation, traits, and Star.
+                </p>
+              </div>
+              <span
+                class="inline-flex items-center gap-1 rounded-full border border-emerald-400/70 bg-emerald-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-200"
+              >
+                <span class="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_0_4px_rgba(34,197,94,0.35)]"></span>
+                Sheet-accurate
+              </span>
+            </div>
+
+            <div class="space-y-3">
+              <div>
+                <label
+                  for="income-brainrot-search"
+                  class="block text-xs text-slate-300 mb-1"
+                  >Brainrot</label
+                >
+                <input
+                  id="income-brainrot-search"
+                  type="text"
+                  placeholder="Type to search brainrot..."
+                  class="mb-1 w-full rounded-md border border-slate-600 bg-slate-900 px-2 py-1 text-xs text-slate-100"
+                />
+                <select
+                  id="income-brainrot-select"
+                  class="w-full rounded-md border border-slate-600 bg-slate-900 px-2 py-1 text-xs text-slate-100"
+                >
+                  <option value="">Loading brainrots...</option>
+                </select>
+                <p class="text-[10px] text-slate-500 mt-0.5">
+                  Start typing to jump to a brainrot.
+                </p>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label
+                    for="income-level-input"
+                    class="block text-xs text-slate-300 mb-1"
+                    >Level</label
+                  >
+                  <input
+                    id="income-level-input"
+                    type="number"
+                    min="1"
+                    max="275"
+                    value="1"
+                  />
+                  <p class="text-[10px] text-slate-500 mt-0.5">
+                    Supports levels 1–275 (incl. post‑202 additive logic).
+                  </p>
+                </div>
+                <div>
+                  <label
+                    for="income-size-select"
+                    class="block text-xs text-slate-300 mb-1"
+                    >Size</label
+                  >
+                  <select id="income-size-select">
+                    <option value="">Loading sizes...</option>
+                  </select>
+                  <p class="text-[10px] text-slate-500 mt-0.5">
+                    Pick a named size or leave blank.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <label
+                  for="income-custom-size-input"
+                  class="block text-xs text-slate-300 mb-1"
+                  >Custom size (optional)</label
+                >
+                <input
+                  id="income-custom-size-input"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="e.g. 1.32"
+                  class="bg-slate-900 text-slate-100 border-slate-600 rounded-md px-2 py-1 text-xs border w-full"
+                />
+                <p class="text-[10px] text-slate-500 mt-0.5">
+                  If provided, this exact size is used instead of the named size (capped at
+                  2.00).
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-4 space-y-3">
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label
+                    for="income-mutation-select"
+                    class="block text-xs text-slate-300 mb-1"
+                    >Mutation</label
+                  >
+                  <select
+                    id="income-mutation-select"
+                    class="bg-slate-900 text-slate-100 border-slate-600"
+                  >
+                    <option value="">Loading...</option>
+                  </select>
+                  <p class="text-[10px] text-slate-500 mt-0.5">
+                    Uses in‑game mutation multipliers.
+                  </p>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <label
+                    class="inline-flex items-center gap-2 text-xs text-slate-300 mt-4"
+                  >
+                    <input
+                      id="income-star-checkbox"
+                      type="checkbox"
+                      class="rounded border-slate-600 bg-slate-950"
+                    />
+                    Star applied to this brainrot
+                  </label>
+                  <p class="text-[10px] text-slate-500">
+                    Star doubles the highest level brainrots in base.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <label
+                  for="income-traits-select"
+                  class="block text-xs text-slate-300 mb-1"
+                  >Traits</label
+                >
+                <select
+                  id="income-traits-select"
+                  multiple
+                  class="traits-select bg-slate-900 text-slate-100 border-slate-600 w-full min-h-[72px] rounded-md px-2 py-1 text-xs"
+                >
+                  <option value="">Loading traits...</option>
+                </select>
+                <p class="text-[10px] text-slate-500 mt-0.5">
+                  Hold Ctrl / Cmd to select multiple traits.
+                </p>
+              </div>
+
+              <div class="flex items-center justify-between gap-3 pt-1">
+                <button
+                  id="income-calc-btn"
+                  class="inline-flex items-center gap-2 rounded-full bg-sky-500 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-950 shadow-lg hover:bg-sky-400"
+                >
+                  Calculate income
+                </button>
+                <button
+                  id="income-reset-btn"
+                  class="inline-flex items-center gap-2 rounded-full border border-slate-600 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-300 hover:bg-slate-800"
+                >
+                  Reset
+                </button>
+              </div>
+
+              <div
+                id="income-error-box"
+                class="hidden text-[11px] text-rose-400 bg-rose-950/40 border border-rose-700/50 rounded-md px-2 py-1.5"
+              ></div>
+            </div>
+          </div>
+
+          <div class="income-pane income-pane--right">
+            <p class="text-xs uppercase tracking-[0.25em] text-slate-300 mb-2">
+              Result
+            </p>
+            <div
+              class="rounded-xl border border-slate-600 bg-slate-950/70 px-3 py-3 space-y-3"
+            >
+              <div class="flex items-baseline justify-between gap-3">
+                <div>
+                  <div class="flex items-baseline gap-2">
+                    <span
+                      id="income-result-value"
+                      class="text-xl md:text-2xl font-semibold tracking-[0.06em]"
+                      >–</span
+                    >
+                    <span
+                      id="income-result-unit-pill"
+                      class="hidden rounded-full border border-sky-400/80 bg-sky-500/15 px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] text-sky-100"
+                    ></span>
+                  </div>
+                  <p
+                    id="income-result-sub"
+                    class="mt-1 text-[11px] text-slate-300"
+                  >
+                    Select a brainrot and press Calculate.
+                  </p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 text-[11px]">
+                <div
+                  class="rounded-md border border-slate-700 bg-slate-900/80 px-2 py-1.5"
+                >
+                  <p class="text-[10px] uppercase tracking-[0.18em] text-slate-500">
+                    Base income
+                  </p>
+                  <p
+                    id="income-base-display"
+                    class="mt-0.5 font-medium text-slate-100"
+                  >
+                    –
+                  </p>
+                </div>
+                <div
+                  class="rounded-md border border-slate-700 bg-slate-900/80 px-2 py-1.5"
+                >
+                  <p class="text-[10px] uppercase tracking-[0.18em] text-slate-500">
+                    Level‑scaled
+                  </p>
+                  <p
+                    id="income-level-display"
+                    class="mt-0.5 font-medium text-slate-100"
+                  >
+                    –
+                  </p>
+                </div>
+                <div
+                  class="rounded-md border border-slate-700 bg-slate-900/80 px-2 py-1.5"
+                >
+                <p class="text-[10px] uppercase tracking-[0.18em] text-slate-500">
+                  Size multiplier
+                </p>
+                <p
+                  id="size-mult-display"
+                  class="mt-0.5 font-medium text-slate-100"
+                >
+                  –
+                </p>
+                <p class="text-[10px] uppercase tracking-[0.18em] text-slate-500">
+                  Mutation multiplier
+                </p>
+                <p
+                  id="mutation-mult-display"
+                  class="mt-0.5 font-medium text-slate-100"
+                >
+                  –
+                </p>
+                <p class="text-[10px] uppercase tracking-[0.18em] text-slate-500">
+                  Traits multiplier
+                </p>
+                <p
+                  id="traits-mult-display"
+                  class="mt-0.5 font-medium text-slate-100"
+                >
+                  –
+                </p>
+                  <p class="text-[10px] uppercase tracking-[0.18em] text-slate-500">
+                    Total multiplier
+                  </p>
+                  <p
+                    id="income-total-mult-display"
+                    class="mt-0.5 font-medium text-slate-100"
+                  >
+                    –
+                  </p>
+                </div>
+                <div
+                  class="rounded-md border border-slate-700 bg-slate-900/80 px-2 py-1.5"
+                >
+                  <p class="text-[10px] uppercase tracking-[0.18em] text-slate-500">
+                    Final (no Star / with Star)
+                  </p>
+                  <p
+                    id="income-final-display"
+                    class="mt-0.5 font-medium text-slate-100"
+                  >
+                    –
+                  </p>
+                </div>
+              </div>
+
+              <p class="text-[10px] text-slate-400 pt-1 border-t border-slate-800/60">
+                Base values use sheet-style truncation to 2 decimals; final income uses
+                game-style rounding to 2 decimals after all multipliers.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="panel-size"
+        role="tabpanel"
+        aria-labelledby="tab-size"
+        class="hidden"
+      >
+        <div
+          class="w-full mt-3 rounded-2xl border border-slate-700 bg-slate-900/90 shadow-2xl p-4 md:p-5 space-y-4"
+        >
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-sm md:text-base font-semibold">
+                Brainrot Size Calculator
+              </h2>
+              <p class="text-[11px] text-slate-400">
+                Recover your true size (4dp) from a displayed in‑game income.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="space-y-3">
+              <div>
+                <label
+                  for="size-brainrot-select"
+                  class="block text-xs text-slate-300 mb-1"
+                  >Brainrot</label
+                >
+                <input
+                  id="size-brainrot-search"
+                  type="text"
+                  placeholder="Type to search brainrot..."
+                  class="mb-1 w-full rounded-md border border-slate-600 bg-slate-950 px-2 py-1 text-xs text-slate-100"
+                />
+                <select
+                  id="size-brainrot-select"
+                  class="w-full rounded-md border border-slate-600 bg-slate-950 px-2 py-1 text-xs text-slate-100"
+                >
+                  <option value="">Loading brainrots...</option>
+                </select>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label
+                    for="size-level-input"
+                    class="block text-xs text-slate-300 mb-1"
+                    >Level</label
+                  >
+                  <input
+                    id="size-level-input"
+                    type="number"
+                    min="1"
+                    max="275"
+                    value="1"
+                    class="w-full rounded-md border border-slate-600 bg-slate-950 px-2 py-1 text-xs text-slate-100"
+                  />
+                  <p class="text-[10px] text-slate-500 mt-0.5">
+                    1–275 (post‑202 additive logic supported).
+                  </p>
+                </div>
+                <div>
+                  <label
+                    for="size-mutation-select"
+                    class="block text-xs text-slate-300 mb-1"
+                    >Mutation</label
+                  >
+                  <select
+                    id="size-mutation-select"
+                    class="w-full rounded-md border border-slate-600 bg-slate-950 px-2 py-1 text-xs text-slate-100"
+                  >
+                    <option value="">Loading...</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label
+                    for="size-traits-select"
+                    class="block text-xs text-slate-300 mb-1"
+                    >Traits</label
+                  >
+                  <select
+                    id="size-traits-select"
+                    multiple
+                    class="w-full min-h-[70px] rounded-md border border-slate-600 bg-slate-950 px-2 py-1 text-xs text-slate-100"
+                  >
+                    <option value="">Loading traits...</option>
+                  </select>
+                  <p class="text-[10px] text-slate-500 mt-0.5">
+                    Hold Ctrl / Cmd to select multiple.
+                  </p>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <label
+                    class="inline-flex items-center gap-2 text-xs text-slate-300 mt-4"
+                  >
+                    <input
+                      id="size-star-checkbox"
+                      type="checkbox"
+                      class="rounded border-slate-600 bg-slate-950"
+                    />
+                    Star active on this brainrot
+                  </label>
+                  <p class="text-[10px] text-slate-500">
+                    Star is applied after size/mutation/traits.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label
+                    for="size-display-value-input"
+                    class="block text-xs text-slate-300 mb-1"
+                  >
+                    Displayed income
+                  </label>
+                  <input
+                    id="size-display-value-input"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="e.g. 469.89"
+                    class="w-full rounded-md border border-slate-600 bg-slate-950 px-2 py-1 text-xs text-slate-100"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="size-display-unit-select"
+                    class="block text-xs text-slate-300 mb-1"
+                  >
+                    Displayed unit
+                  </label>
+                  <select
+                    id="size-display-unit-select"
+                    class="w-full rounded-md border border-slate-600 bg-slate-950 px-2 py-1 text-xs text-slate-100"
+                  >
+                    <option value="">Loading units...</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label
+                  for="size-title-select"
+                  class="block text-xs text-slate-300 mb-1"
+                >
+                  In-game size title (optional)
+                </label>
+                <select
+                  id="size-title-select"
+                  class="w-full rounded-md border border-slate-600 bg-slate-950 px-2 py-1 text-xs text-slate-100"
+                >
+                  <option value="">Auto (show both)</option>
+                </select>
+                <p class="text-[10px] text-slate-500 mt-0.5">
+                  If you pick the title you see in-game, we’ll choose the matching small/big size.
+                </p>
+              </div>
+
+              <div class="flex items-center justify-between gap-3 mt-1">
+                <button
+                  id="size-calc-btn"
+                  class="inline-flex items-center gap-2 rounded-full bg-sky-500 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-950 shadow-lg hover:bg-sky-400"
+                >
+                  Calculate size
+                </button>
+                <button
+                  id="size-reset-btn"
+                  class="inline-flex items-center gap-2 rounded-full border border-slate-600 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-300 hover:bg-slate-800"
+                >
+                  Reset
+                </button>
+              </div>
+
+              <div
+                id="size-error-box"
+                class="hidden text-[11px] text-rose-400 bg-rose-950/40 border border-rose-700/50 rounded-md px-2 py-1.5"
+              ></div>
+
+              <div
+                class="mt-2 rounded-md border border-slate-700 bg-slate-950/60 px-3 py-2 text-xs space-y-1.5"
+              >
+                <div class="flex items-center justify-between">
+                  <span
+                    class="text-slate-400 uppercase tracking-[0.2em] text-[10px]"
+                    >Estimated size</span
+                  >
+                  <span id="size-name" class="text-[11px] text-slate-300"></span>
+                </div>
+                <div class="text-sm font-semibold text-slate-50 flex items-baseline gap-2">
+                  <span id="size-value-main-4dp">–</span>
+                  <span class="text-[11px] font-medium text-slate-400">x</span>
+                </div>
+                <div id="size-alt" class="text-[11px] text-slate-400"></div>
+                <p
+                  class="text-[10px] text-slate-500 pt-1 border-t border-slate-800/60"
+                >
+                  Use the 4dp size value in the income calculator tab for an exact match.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // === Embedded JSON data (copied from the separate files) ===
+      const BASE_INCOME_DATA = [
+  {
+    "name": "Noobini Cakenini",
+    "rarity": "Common",
+    "base_income": 2
+  },
+  {
+    "name": "Lirili Larila",
+    "rarity": "Common",
+    "base_income": 4
+  },
+  {
+    "name": "Tim Cheese",
+    "rarity": "Common",
+    "base_income": 6
+  },
+  {
+    "name": "Frulli Frulla",
+    "rarity": "Common",
+    "base_income": 7
+  },
+  {
+    "name": "Talpa Di Fero",
+    "rarity": "Common",
+    "base_income": 9
+  },
+  {
+    "name": "Svinino Bombondino",
+    "rarity": "Common",
+    "base_income": 11
+  },
+  {
+    "name": "Pipi Kiwi",
+    "rarity": "Common",
+    "base_income": 13
+  },
+  {
+    "name": "Pipi Corni",
+    "rarity": "Common",
+    "base_income": 15
+  },
+
+  {
+    "name": "Trippi Troppi",
+    "rarity": "Uncommon",
+    "base_income": 20
+  },
+  {
+    "name": "Gangster Footera",
+    "rarity": "Uncommon",
+    "base_income": 30
+  },
+  {
+    "name": "Bobrito Bandito",
+    "rarity": "Uncommon",
+    "base_income": 35
+  },
+  {
+    "name": "Boneca Ambalabu",
+    "rarity": "Uncommon",
+    "base_income": 40
+  },
+  {
+    "name": "Cacto Hipopotamo",
+    "rarity": "Uncommon",
+    "base_income": 50
+  },
+  {
+    "name": "Ta Ta Ta Sahur",
+    "rarity": "Uncommon",
+    "base_income": 60
+  },
+  {
+    "name": "Tric Tric Baraboom",
+    "rarity": "Uncommon",
+    "base_income": 70
+  },
+  {
+    "name": "67",
+    "rarity": "Uncommon",
+    "base_income": 90
+  },
+  {
+    "name": "Pipi Avocado",
+    "rarity": "Uncommon",
+    "base_income": 120
+  },
+
+  {
+    "name": "Cappuccino Assassino",
+    "rarity": "Rare",
+    "base_income": 100
+  },
+  {
+    "name": "Brr Brr Patapim",
+    "rarity": "Rare",
+    "base_income": 120
+  },
+  {
+    "name": "Trulimero Trulichina",
+    "rarity": "Rare",
+    "base_income": 135
+  },
+  {
+    "name": "Bambini Crostini",
+    "rarity": "Rare",
+    "base_income": 150
+  },
+  {
+    "name": "Bananita Dolphinita",
+    "rarity": "Rare",
+    "base_income": 170
+  },
+  {
+    "name": "Brr Brr Patapim (Alt)",
+    "rarity": "Rare",
+    "base_income": 180
+  },
+  {
+    "name": "Perochello Lemonchello",
+    "rarity": "Rare",
+    "base_income": 190
+  },
+  {
+    "name": "Avocadini Guffo",
+    "rarity": "Rare",
+    "base_income": 210
+  },
+  {
+    "name": "Salamino Penguino",
+    "rarity": "Rare",
+    "base_income": 229
+  },
+  {
+    "name": "Penguino Cocosino",
+    "rarity": "Rare",
+    "base_income": 250
+  },
+  {
+    "name": "Ti Ti Ti Sahur",
+    "rarity": "Rare",
+    "base_income": 275
+  },
+
+  {
+    "name": "Burbaloni Luliloli",
+    "rarity": "Epic",
+    "base_income": 290
+  },
+  {
+    "name": "Chimpanzini Bananini",
+    "rarity": "Epic",
+    "base_income": 475
+  },
+  {
+    "name": "Ballerina Cappuccina",
+    "rarity": "Epic",
+    "base_income": 550
+  },
+  {
+    "name": "Chef Crabracadabra",
+    "rarity": "Epic",
+    "base_income": 625
+  },
+  {
+    "name": "Lionel Cactuseli",
+    "rarity": "Epic",
+    "base_income": 700
+  },
+  {
+    "name": "Glorbo Fruttodrillo",
+    "rarity": "Epic",
+    "base_income": 775
+  },
+  {
+    "name": "Strawberrilli Flamengilli",
+    "rarity": "Epic",
+    "base_income": 925
+  },
+  {
+    "name": "Pandaccini Bananini",
+    "rarity": "Epic",
+    "base_income": 1000
+  },
+  {
+    "name": "Sigma Boy",
+    "rarity": "Epic",
+    "base_income": 1100
+  },
+  {
+    "name": "Pi Pi Watermelon",
+    "rarity": "Epic",
+    "base_income": 1200
+  },
+  {
+    "name": "Blueberrinni Octopussini",
+    "rarity": "Epic",
+    "base_income": 1270
+  },
+  {
+    "name": "Cocosini Mama",
+    "rarity": "Epic",
+    "base_income": 1300
+  },
+  {
+    "name": "Guesto Angelic",
+    "rarity": "Epic",
+    "base_income": 1400
+  },
+
+  {
+    "name": "Frigo Camelo",
+    "rarity": "Legendary",
+    "base_income": 1500
+  },
+  {
+    "name": "Orangutini Ananasini",
+    "rarity": "Legendary",
+    "base_income": 1700
+  },
+  {
+    "name": "Rhino Toasterino",
+    "rarity": "Legendary",
+    "base_income": 1900
+  },
+  {
+    "name": "Bombardiro Crocodilo",
+    "rarity": "Legendary",
+    "base_income": 2100
+  },
+  {
+    "name": "Spioniro Golubiro",
+    "rarity": "Legendary",
+    "base_income": 2290
+  },
+  {
+    "name": "Bombombini Gusini",
+    "rarity": "Legendary",
+    "base_income": 2600
+  },
+  {
+    "name": "Zibra Zubra Zibralini",
+    "rarity": "Legendary",
+    "base_income": 2900
+  },
+  {
+    "name": "Tigrilini Watermelini",
+    "rarity": "Legendary",
+    "base_income": 3200
+  },
+  {
+    "name": "Cavallo Virtuoso",
+    "rarity": "Legendary",
+    "base_income": 3500
+  },
+  {
+    "name": "Gorillo Watermelondrillo",
+    "rarity": "Legendary",
+    "base_income": 4000
+  },
+  {
+    "name": "Avocadorilla",
+    "rarity": "Legendary",
+    "base_income": 4500
+  },
+  {
+    "name": "Eaglucci Cocosucci",
+    "rarity": "Legendary",
+    "base_income": 4700
+  },
+  {
+    "name": "Ganganzelli Trulala",
+    "rarity": "Legendary",
+    "base_income": 5000
+  },
+
+  {
+    "name": "Cocofanto Elefanto",
+    "rarity": "Mythical",
+    "base_income": 6000
+  },
+  {
+    "name": "Giraffa Celeste",
+    "rarity": "Mythical",
+    "base_income": 7000
+  },
+  {
+    "name": "Tralalero Tralala",
+    "rarity": "Mythical",
+    "base_income": 8000
+  },
+  {
+    "name": "Los Crocodillitos",
+    "rarity": "Mythical",
+    "base_income": 9000
+  },
+  {
+    "name": "Tigroligre Frutonni",
+    "rarity": "Mythical",
+    "base_income": 10000
+  },
+  {
+    "name": "Udin Din Din Dun",
+    "rarity": "Mythical",
+    "base_income": 11000
+  },
+  {
+    "name": "Trenostruzzo Turbo 3000",
+    "rarity": "Mythical",
+    "base_income": 13000
+  },
+  {
+    "name": "Trippi Troppi Troppa Trippa",
+    "rarity": "Mythical",
+    "base_income": 15000
+  },
+  {
+    "name": "Orcalero Orcala",
+    "rarity": "Mythical",
+    "base_income": 18000
+  },
+  {
+    "name": "Piccione Macchina",
+    "rarity": "Mythical",
+    "base_income": 19000
+  },
+  {
+    "name": "Tukanno Bananno",
+    "rarity": "Mythical",
+    "base_income": 21000
+  },
+  {
+    "name": "Ballerino Lololo",
+    "rarity": "Mythical",
+    "base_income": 25250
+  },
+
+  {
+    "name": "La Vacca Saturno",
+    "rarity": "Cosmic",
+    "base_income": 22000
+  },
+  {
+    "name": "Torrtuginni Dragonfrutini",
+    "rarity": "Cosmic",
+    "base_income": 30000
+  },
+  {
+    "name": "Los Tralaleritos",
+    "rarity": "Cosmic",
+    "base_income": 48000
+  },
+  {
+    "name": "Las Tralaleritas",
+    "rarity": "Cosmic",
+    "base_income": 50000
+  },
+  {
+    "name": "Las Vaquitas Saturnitas",
+    "rarity": "Cosmic",
+    "base_income": 60000
+  },
+  {
+    "name": "Graipuss Medussi",
+    "rarity": "Cosmic",
+    "base_income": 70000
+  },
+  {
+    "name": "Pot Hotspot",
+    "rarity": "Cosmic",
+    "base_income": 80000
+  },
+  {
+    "name": "Chicleteira Bicicleteira",
+    "rarity": "Cosmic",
+    "base_income": 90000
+  },
+  {
+    "name": "La Grande Combinasion",
+    "rarity": "Cosmic",
+    "base_income": 100000
+  },
+  {
+    "name": "Nuclearo Dinossauro",
+    "rarity": "Cosmic",
+    "base_income": 110000
+  },
+  {
+    "name": "Garama and Madundung",
+    "rarity": "Cosmic",
+    "base_income": 120000
+  },
+  {
+    "name": "Dragon Cannelloni",
+    "rarity": "Cosmic",
+    "base_income": 130000
+  },
+  {
+    "name": "Agarrini la Palini",
+    "rarity": "Cosmic",
+    "base_income": 150000
+  },
+  {
+    "name": "Chimpanzini Spiderini",
+    "rarity": "Cosmic",
+    "base_income": 170000
+  },
+  {
+    "name": "Dariungini Pandanneli",
+    "rarity": "Cosmic",
+    "base_income": 190000
+  },
+  {
+    "name": "Vroosh Boosh",
+    "rarity": "Cosmic",
+    "base_income": 240000
+  },
+  {
+    "name": "Gatti Marshmallini",
+    "rarity": "Cosmic",
+    "base_income": null
+  },
+
+  {
+    "name": "Matteo",
+    "rarity": "Secret",
+    "base_income": 200000
+  },
+  {
+    "name": "Gattatino Neonino",
+    "rarity": "Secret",
+    "base_income": 250000
+  },
+  {
+    "name": "Statutino Libertino",
+    "rarity": "Secret",
+    "base_income": 300000
+  },
+  {
+    "name": "Unclito Samito",
+    "rarity": "Secret",
+    "base_income": 350000
+  },
+  {
+    "name": "Gattatino Donutino",
+    "rarity": "Secret",
+    "base_income": 400000
+  },
+  {
+    "name": "Espresso Signora",
+    "rarity": "Secret",
+    "base_income": 450000
+  },
+  {
+    "name": "Los Tungtungtungcitos",
+    "rarity": "Secret",
+    "base_income": 500000
+  },
+  {
+    "name": "Aura Farma",
+    "rarity": "Secret",
+    "base_income": 700000
+  },
+  {
+    "name": "Los Combinasionas",
+    "rarity": "Secret",
+    "base_income": 600000
+  },
+  {
+    "name": "Rainbow 67",
+    "rarity": "Secret",
+    "base_income": 800000
+  },
+  {
+    "name": "Fragola La La La",
+    "rarity": "Secret",
+    "base_income": 1000000
+  },
+  {
+    "name": "Eek Eek Eek Sahur",
+    "rarity": "Secret",
+    "base_income": 1050000
+  },
+  {
+    "name": "La Vacca Black Hole Goat",
+    "rarity": "Secret",
+    "base_income": 1200000
+  },
+  {
+    "name": "Bambooini Bombini",
+    "rarity": "Secret",
+    "base_income": 1140000
+  },
+  {
+    "name": "Mastodontico Telepiedone",
+    "rarity": "Secret",
+    "base_income": 1420000
+  },
+  {
+    "name": "Tartarughi Attrezzini",
+    "rarity": "Secret",
+    "base_income": 3070000
+  },
+  {
+    "name": "Tractoro Dinosauro",
+    "rarity": "Secret",
+    "base_income": 4650000
+  },
+  {
+    "name": "Capybara Monitora",
+    "rarity": "Secret",
+    "base_income": 5090000
+  },
+  {
+    "name": "Kissarini Heartini",
+    "rarity": "Secret",
+    "base_income": 5250000
+  },
+  {
+    "name": "Patatino Astronauta",
+    "rarity": "Secret",
+    "base_income": 5700000
+  },
+  {
+    "name": "Patito Dinerito",
+    "rarity": "Secret",
+    "base_income": 6000000
+  },
+  {
+    "name": "Onionello Penguini",
+    "rarity": "Secret",
+    "base_income": 6450000
+  },
+  {
+    "name": "Scaldarino Derpino",
+    "rarity": "Secret",
+    "base_income": 7050000
+  },
+  {
+    "name": "Marietti Frigo",
+    "rarity": "Secret",
+    "base_income": 7500000
+  },
+  {
+    "name": "Sausaggini Sanitario",
+    "rarity": "Secret",
+    "base_income": 9360000
+  },
+
+  {
+    "name": "Caffe Trinity (Unobtainable)",
+    "rarity": "Celestial",
+    "base_income": 2000000
+  },
+  {
+    "name": "Job Job Job Sahur",
+    "rarity": "Celestial",
+    "base_income": 7500000
+  },
+  {
+    "name": "Dug Dug Dug",
+    "rarity": "Celestial",
+    "base_income": 8000000
+  },
+  {
+    "name": "Bisonte Giuppitere",
+    "rarity": "Celestial",
+    "base_income": 8500000
+  },
+  {
+    "name": "Alessio",
+    "rarity": "Celestial",
+    "base_income": 9000000
+  },
+  {
+    "name": "Esok Sekolah",
+    "rarity": "Celestial",
+    "base_income": 9500000
+  },
+  {
+    "name": "Polpo Semaforini",
+    "rarity": "Celestial",
+    "base_income": 10750000
+  },
+  {
+    "name": "La Malita",
+    "rarity": "Celestial",
+    "base_income": 12000000
+  },
+  {
+    "name": "Diamantusa",
+    "rarity": "Celestial",
+    "base_income": 12250000
+  },
+  {
+    "name": "Avocadini Antilopini",
+    "rarity": "Celestial",
+    "base_income": 13000000
+  },
+  {
+    "name": "Los Orcaleritos",
+    "rarity": "Celestial",
+    "base_income": 14000000
+  },
+  {
+    "name": "Capuccino Policia",
+    "rarity": "Celestial",
+    "base_income": 14500000
+  },
+  {
+    "name": "Money Elephant",
+    "rarity": "Celestial",
+    "base_income": 14750000
+  },
+  {
+    "name": "Zung Zung Zung Lazur",
+    "rarity": "Celestial",
+    "base_income": 14750000
+  },
+  {
+    "name": "Cioccolatone Draghettone",
+    "rarity": "Celestial",
+    "base_income": 15000000
+  },
+  {
+    "name": "Rattini Machini",
+    "rarity": "Celestial",
+    "base_income": 15250000
+  },
+  {
+    "name": "Ketupastro Infernetto",
+    "rarity": "Celestial",
+    "base_income": 15500000
+  },
+
+  {
+    "name": "Bulbito Bandito Traktorito",
+    "rarity": "Divine",
+    "base_income": 30000000
+  },
+  {
+    "name": "Burgerini Bearini",
+    "rarity": "Divine",
+    "base_income": 35000000
+  },
+  {
+    "name": "Martino Gravitino",
+    "rarity": "Divine",
+    "base_income": 45000000
+  },
+  {
+    "name": "Grappellino D'Oro",
+    "rarity": "Divine",
+    "base_income": 47500000
+  },
+  {
+    "name": "Strawberry Elephant",
+    "rarity": "Divine",
+    "base_income": 50000000
+  },
+  {
+    "name": "Din Din Vaultero",
+    "rarity": "Divine",
+    "base_income": 55000000
+  },
+  {
+    "name": "Glacierello Infernetti",
+    "rarity": "Divine",
+    "base_income": 60000000
+  },
+  {
+    "name": "Explodini Cataclismi",
+    "rarity": "Divine",
+    "base_income": 65000000
+  },
+  {
+    "name": "Biscotti Macarotti",
+    "rarity": "Divine",
+    "base_income": 75000000
+  },
+  {
+    "name": "Pastapot Infernetto",
+    "rarity": "Divine",
+    "base_income": 82500000
+  },
+  {
+    "name": "Galactio Fantasma",
+    "rarity": "Divine",
+    "base_income": 88800000
+  },
+  {
+    "name": "Rubichetto Cubini",
+    "rarity": "Divine",
+    "base_income": 88800000
+  },
+  {
+    "name": "Freezeti Cobretti",
+    "rarity": "Divine",
+    "base_income": 90000000
+  },
+  {
+    "name": "Biscottino Scheletrino",
+    "rarity": "Divine",
+    "base_income": 90000000
+  },
+  {
+    "name": "Cupitron Consoletron",
+    "rarity": "Divine",
+    "base_income": 92500000
+  },
+  {
+    "name": "Draculini Meowlini",
+    "rarity": "Divine",
+    "base_income": 95000000
+  },
+  {
+    "name": "Don Magmito",
+    "rarity": "Divine",
+    "base_income": 100000000
+  },
+  {
+    "name": "Crostina Gelifio",
+    "rarity": "Divine",
+    "base_income": 102500000
+  },
+  {
+    "name": "Dutchmello Velerino",
+    "rarity": "Divine",
+    "base_income": 105000000
+  },
+
+  {
+    "name": "Noobini Infeeny",
+    "rarity": "Infinity",
+    "base_income": 250000000
+  },
+  {
+    "name": "Anububu",
+    "rarity": "Infinity",
+    "base_income": 375000000
+  },
+  {
+    "name": "Magmew",
+    "rarity": "Infinity",
+    "base_income": 750000000
+  },
+  {
+    "name": "Doomini Tiktookini",
+    "rarity": "Infinity",
+    "base_income": 800000000
+  },
+  {
+    "name": "Meta Technetta",
+    "rarity": "Infinity",
+    "base_income": 875000000
+  }
+];
+      
+      const MULTIPLIERS_DATA = [
+  {
+    "name": "None",
+    "multiplier": 1,
+    "type": "Mutation"
+  },
+  {
+    "name": "Emerald",
+    "multiplier": 1.5,
+    "type": "Mutation"
+  },
+  {
+    "name": "Gold",
+    "multiplier": 1.5,
+    "type": "Mutation"
+  },
+  {
+    "name": "Blood",
+    "multiplier": 2,
+    "type": "Mutation"
+  },
+  {
+    "name": "Diamond",
+    "multiplier": 4.25,
+    "type": "Mutation"
+  },
+  {
+    "name": "Electric",
+    "multiplier": 3,
+    "type": "Mutation"
+  },
+  {
+    "name": "UFO",
+    "multiplier": 3.5,
+    "type": "Mutation"
+  },
+  {
+    "name": "Radioactive",
+    "multiplier": 3.9,
+    "type": "Mutation"
+  },
+  {
+    "name": "Candy",
+    "multiplier": 3.95,
+    "type": "Mutation"
+  },
+  {
+    "name": "Money",
+    "multiplier": 3.95,
+    "type": "Mutation"
+  },
+  {
+    "name": "Doom",
+    "multiplier": 3.95,
+    "type": "Mutation"
+  },
+  {
+    "name": "Fire",
+    "multiplier": 4,
+    "type": "Mutation"
+  },
+  {
+    "name": "Ice",
+    "multiplier": 4,
+    "type": "Mutation"
+  },
+  {
+    "name": "Phantom",
+    "multiplier": 4,
+    "type": "Mutation"
+  },
+  {
+    "name": "Gamer",
+    "multiplier": 4,
+    "type": "Mutation"
+  },
+  {
+    "name": "Admin",
+    "multiplier": 4.5,
+    "type": "Mutation"
+  },
+  {
+    "name": "Hacker",
+    "multiplier": 5,
+    "type": "Mutation"
+  },
+  {
+    "name": "Lucky",
+    "multiplier": 8,
+    "type": "Mutation"
+  },
+  {
+    "name": "Galaxy",
+    "multiplier": 2,
+    "type": "Trait"
+  },
+  {
+    "name": "Magma",
+    "multiplier": 2,
+    "type": "Trait"
+  },
+  {
+    "name": "Star",
+    "multiplier": 2,
+    "type": "Modifier"
+  }
+];
+      const SIZES_DATA = [
+  {
+    "name": "Lil Baby",
+    "min_range": 0,
+    "max_range": 0.24,
+    "min_multiplier": 2.0,
+    "max_multiplier": 2.0
+  },
+  {
+    "name": "Baby",
+    "min_range": 0.25,
+    "max_range": 0.39,
+    "min_multiplier": 1.61,
+    "max_multiplier": 1.75
+  },
+  {
+    "name": "Mini",
+    "min_range": 0.40,
+    "max_range": 0.74,
+    "min_multiplier": 1.26,
+    "max_multiplier": 1.60
+  },
+  {
+    "name": "Default",
+    "min_range": 0.75,
+    "max_range": 1.24,
+    "min_multiplier": 1.25,
+    "max_multiplier": 1.25
+  },
+  {
+    "name": "Big",
+    "min_range": 1.25,
+    "max_range": 1.74,
+    "min_multiplier": 1.25,
+    "max_multiplier": 1.74
+  },
+  {
+    "name": "Titan",
+    "min_range": 1.75,
+    "max_range": 1.75,
+    "min_multiplier": 1.75,
+    "max_multiplier": 1.75
+  },
+  {
+    "name": "Colossal",
+    "min_range": 1.76,
+    "max_range": 3,
+    "min_multiplier": 1.75,
+    "max_multiplier": 2
+  }
+];
+      const UNITS_DATA = [
+  {
+    "name": "Green /s",
+    "tier": "Green",
+    "suffix": "/s"
+  },
+  {
+    "name": "Green K/s",
+    "tier": "Green",
+    "suffix": "K/s"
+  },
+  {
+    "name": "Green M/s",
+    "tier": "Green",
+    "suffix": "M/s"
+  },
+  {
+    "name": "Green B/s",
+    "tier": "Green",
+    "suffix": "B/s"
+  },
+  {
+    "name": "Green T/s",
+    "tier": "Green",
+    "suffix": "T/s"
+  },
+  {
+    "name": "Green Qd/s",
+    "tier": "Green",
+    "suffix": "Qd/s"
+  },
+  {
+    "name": "Green Qn/s",
+    "tier": "Green",
+    "suffix": "Qn/s"
+  },
+  {
+    "name": "Green Sx/s",
+    "tier": "Green",
+    "suffix": "Sx/s"
+  },
+  {
+    "name": "Yellow /s",
+    "tier": "Yellow",
+    "suffix": "/s"
+  },
+  {
+    "name": "Yellow K/s",
+    "tier": "Yellow",
+    "suffix": "K/s"
+  },
+  {
+    "name": "Yellow M/s",
+    "tier": "Yellow",
+    "suffix": "M/s"
+  },
+  {
+    "name": "Yellow B/s",
+    "tier": "Yellow",
+    "suffix": "B/s"
+  },
+  {
+    "name": "Yellow T/s",
+    "tier": "Yellow",
+    "suffix": "T/s"
+  },
+  {
+    "name": "Yellow Qd/s",
+    "tier": "Yellow",
+    "suffix": "Qd/s"
+  },
+  {
+    "name": "Yellow Qn/s",
+    "tier": "Yellow",
+    "suffix": "Qn/s"
+  },
+  {
+    "name": "Yellow Sx/s",
+    "tier": "Yellow",
+    "suffix": "Sx/s"
+  }
+];
+      const LEVEL_RULES = [
+  {
+    "type": "multiplier",
+    "value": 1.25,
+    "start_level": 2,
+    "end_level": 115
+  },
+  {
+    "type": "multiplier",
+    "value": 1.4,
+    "start_level": 116,
+    "end_level": 150
+  },
+  {
+    "type": "multiplier",
+    "value": 1.28,
+    "start_level": 151,
+    "end_level": 200
+  },
+  {
+    "type": "multiplier",
+    "value": 1.10,
+    "start_level": 201,
+    "end_level": 201
+  },
+  {
+    "type": "additive_diff",
+    "start_level": 202,
+    "end_level": 275
+  }
+];
+
+      // === Shared helpers (lifted from the original calculators) ===
+      function trunc2(num) {
+        return Math.trunc(num * 100) / 100;
+      }
+
+      function trunc1(num) {
+        return Math.trunc(num * 10) / 10;
+      }
+
+      function clamp(num, min, max) {
+        if (!Number.isFinite(num)) return num;
+        return Math.min(max, Math.max(min, num));
+      }
+
+      function formatFixed(num, fractionDigits) {
+        if (!Number.isFinite(num)) return "NaN";
+        const abs = Math.abs(num);
+        if (abs !== 0 && (abs >= 1e12 || abs < 1e-4)) {
+          return num.toExponential(4);
+        }
+        return num.toLocaleString("en-US", {
+          minimumFractionDigits: fractionDigits,
+          maximumFractionDigits: fractionDigits,
+          useGrouping: false,
+        });
+      }
+
+      function findLevelRule(levelRules, level) {
+        return levelRules.find(
+          (rule) => level >= rule.start_level && level <= rule.end_level
+        );
+      }
+
+      function computeLevelIncome(baseIncome, level) {
+        if (!Number.isFinite(baseIncome) || baseIncome <= 0) return 0;
+        const maxLevel = Math.max(1, Math.min(level, 275));
+        const income = [];
+        income[1] = baseIncome;
+
+        for (let lvl = 2; lvl <= maxLevel; lvl++) {
+          const rule = findLevelRule(LEVEL_RULES, lvl);
+          const prev = income[lvl - 1];
+          if (!rule) {
+            income[lvl] = prev;
+            continue;
+          }
+          if (rule.type === "multiplier") {
+            income[lvl] = prev * rule.value;
+          } else if (rule.type === "additive_diff") {
+            const prevPrev = income[lvl - 2] ?? prev;
+            const diff = prev - prevPrev;
+            income[lvl] = prev + diff;
+          } else {
+            income[lvl] = prev;
+          }
+        }
+        return income[maxLevel] ?? income[1];
+      }
+
+      function computeSizeMultiplier(sizeEntry) {
+        if (!sizeEntry) return 1;
+        const min = Number(sizeEntry.min_multiplier ?? 1);
+        const max = Number(sizeEntry.max_multiplier ?? min);
+        if (!Number.isFinite(min) || !Number.isFinite(max)) return 1;
+        // Backend failsafe: in-game size multiplier is capped at 2.00
+        return Math.min(2, (min + max) / 2);
+      }
+
+      function formatWithUnit(rawIncome) {
+        if (!Number.isFinite(rawIncome) || rawIncome <= 0) {
+          return { value: 0, unit: null, tier: null, raw: 0, index: 0 };
+        }
+        let value = rawIncome;
+        let index = 0;
+        const base = 1000;
+        while (value >= base && index < UNITS_DATA.length - 1) {
+          value /= base;
+          index++;
+        }
+        const unit = UNITS_DATA[index] ?? UNITS_DATA[0];
+        return {
+          value,
+          unit: unit.name,
+          tier: unit.tier,
+          raw: rawIncome,
+          index,
+        };
+      }
+
+      function inferSizeFromMultiplier(multiplier) {
+        if (!Number.isFinite(multiplier) || multiplier <= 0) return [];
+
+        // Invert dev size formula:
+        // m = 1 + min(|s - 1|, 1)
+        // For 1 <= m < 2: |s - 1| = (m - 1) => s = 1 ± (m - 1) => { 2 - m, m }
+        // For m >= 2: size is in capped region (s <= 0.25 or s >= 2.0 in our UI model)
+        const m = multiplier;
+
+        const pickSizeEntryForValue = (sizeValue) => {
+          let best = null;
+          let bestDist = Infinity;
+          for (const s of SIZES_DATA) {
+            const minR = Number(s.min_range);
+            const maxR = Number(s.max_range);
+            if (!Number.isFinite(minR) || !Number.isFinite(maxR)) continue;
+            if (sizeValue + 1e-9 >= minR && sizeValue - 1e-9 <= maxR) return s;
+            const dist =
+              sizeValue < minR ? minR - sizeValue : sizeValue > maxR ? sizeValue - maxR : 0;
+            if (dist < bestDist) {
+              bestDist = dist;
+              best = s;
+            }
+          }
+          return best;
+        };
+
+        // Normalize extreme/invalid multiplier inputs into the game's 1..2 range
+        if (m < 1) return [];
+
+        if (m >= 2.0 - 1e-9) {
+          const smallValue = 0.25;
+          const bigValue = 2.0;
+          return [
+            { size: pickSizeEntryForValue(bigValue), sizeValue: bigValue, multiplier: 2.0 },
+            { size: pickSizeEntryForValue(smallValue), sizeValue: smallValue, multiplier: 2.0 },
+          ].filter((x) => x.size);
+        }
+
+        const smallValue = 2.0 - m;
+        const bigValue = m;
+
+        const out = [];
+        const bigEntry = pickSizeEntryForValue(bigValue);
+        const smallEntry = pickSizeEntryForValue(smallValue);
+        if (bigEntry) out.push({ size: bigEntry, sizeValue: bigValue, multiplier: m });
+        if (smallEntry) out.push({ size: smallEntry, sizeValue: smallValue, multiplier: m });
+        return out;
+      }
+
+      function multiplierFromSizeValue(sizeValue) {
+        // Invalid inputs (non-positive or non-finite) return 1, as in original
+        if (!Number.isFinite(sizeValue) || sizeValue <= 0) return 1;
+
+        // Dev formula:
+        // sizeMultiplier = 1 + min(|size - 1|, 1)
+        // Hard-cap behavior requested: 2.00 for sizes <= 0.25 and >= 2.00
+        if (sizeValue <= 0.25) return 2.0;
+        if (sizeValue >= 2.0) return 2.0;
+
+        const multiplier = 1 + Math.min(Math.abs(sizeValue - 1), 1);
+        return Math.min(2.0, multiplier);
+      }
+
+      // === Income calculator wiring (adapted from brainrot-ms-calculator.html) ===
+      function initIncomeCalculator() {
+        const brainrotSearch = document.getElementById("income-brainrot-search");
+        const brainrotSelect = document.getElementById("income-brainrot-select");
+        const levelInput = document.getElementById("income-level-input");
+        const sizeSelect = document.getElementById("income-size-select");
+        const mutationSelect = document.getElementById("income-mutation-select");
+        const traitsSelect = document.getElementById("income-traits-select");
+        const starCheckbox = document.getElementById("income-star-checkbox");
+        const customSizeInput = document.getElementById("income-custom-size-input");
+
+        const resultValue = document.getElementById("income-result-value");
+        const resultUnitPill = document.getElementById("income-result-unit-pill");
+        const resultSub = document.getElementById("income-result-sub");
+
+        const baseIncomeDisplay = document.getElementById("income-base-display");
+        const levelIncomeDisplay = document.getElementById("income-level-display");
+        const sizeMultDisplay = document.getElementById("size-mult-display");
+        const mutationMultDisplay = document.getElementById("mutation-mult-display");
+        const traitsMultDisplay = document.getElementById("traits-mult-display");
+        const totalMultiplierDisplay = document.getElementById(
+          "income-total-mult-display"
+        );
+        const finalDisplay = document.getElementById("income-final-display");
+        const errorBox = document.getElementById("income-error-box");
+
+        const calculateBtn = document.getElementById("income-calc-btn");
+        const resetBtn = document.getElementById("income-reset-btn");
+
+        let baseIncomeData = BASE_INCOME_DATA.slice();
+        let multipliersData = MULTIPLIERS_DATA.slice();
+        let sizesData = SIZES_DATA.slice();
+        let unitsData = UNITS_DATA.slice();
+
+        // Populate brainrots grouped by rarity
+        const byRarity = {};
+        for (const entry of baseIncomeData) {
+          if (entry.base_income == null) continue;
+          const rarity = entry.rarity || "Unknown";
+          if (!byRarity[rarity]) byRarity[rarity] = [];
+          byRarity[rarity].push(entry);
+        }
+        for (const rarity of Object.keys(byRarity)) {
+          byRarity[rarity].sort((a, b) =>
+            a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
+          );
+        }
+        brainrotSelect.innerHTML = '<option value="">Select brainrot...</option>';
+        Object.keys(byRarity)
+          .sort()
+          .forEach((rarity) => {
+            const group = document.createElement("optgroup");
+            group.label = rarity;
+            for (const entry of byRarity[rarity]) {
+              const opt = document.createElement("option");
+              opt.value = entry.name;
+              opt.textContent = entry.name;
+              group.appendChild(opt);
+            }
+            brainrotSelect.appendChild(group);
+          });
+
+        // Sizes
+        sizeSelect.innerHTML =
+          '<option value="">Select size (default = 1x)</option>';
+        for (const size of sizesData) {
+          const opt = document.createElement("option");
+          opt.value = size.name;
+          opt.textContent = size.name;
+          sizeSelect.appendChild(opt);
+        }
+
+        // Mutations, traits, star
+        const mutationEntries = multipliersData.filter(
+          (m) => m.type === "Mutation"
+        );
+        const traitEntries = multipliersData.filter((m) => m.type === "Trait");
+        const starEntry = multipliersData.find(
+          (m) => m.type === "Modifier" && m.name === "Star"
+        );
+
+        mutationSelect.innerHTML = "";
+        for (const m of mutationEntries) {
+          const opt = document.createElement("option");
+          opt.value = m.name;
+          opt.textContent = `${m.name} (${m.multiplier}x)`;
+          mutationSelect.appendChild(opt);
+        }
+
+        traitsSelect.innerHTML = "";
+        for (const t of traitEntries) {
+          const opt = document.createElement("option");
+          opt.value = t.name;
+          opt.textContent = `${t.name} (${t.multiplier}x)`;
+          traitsSelect.appendChild(opt);
+        }
+
+        function handleBrainrotSearch() {
+          const query = brainrotSearch.value.trim().toLowerCase();
+          if (!query) return;
+          const options = brainrotSelect.querySelectorAll("option");
+          for (const opt of options) {
+            if (!opt.value) continue;
+            if (opt.textContent.toLowerCase().includes(query)) {
+              brainrotSelect.value = opt.value;
+              break;
+            }
+          }
+        }
+
+        function resetOutputs() {
+          resultValue.textContent = "–";
+          resultUnitPill.style.display = "none";
+          resultUnitPill.textContent = "";
+          resultSub.textContent = "Select a brainrot and press Calculate.";
+          baseIncomeDisplay.textContent = "–";
+          levelIncomeDisplay.textContent = "–";
+          sizeMultDisplay.textContent = "–";
+          mutationMultDisplay.textContent = "–";
+          traitsMultDisplay.textContent = "–";
+          totalMultiplierDisplay.textContent = "–";
+          finalDisplay.textContent = "–";
+          errorBox.classList.add("hidden");
+          errorBox.textContent = "";
+        }
+
+        function handleReset() {
+          brainrotSelect.value = "";
+          brainrotSearch.value = "";
+          levelInput.value = 1;
+          sizeSelect.value = "";
+          mutationSelect.selectedIndex = 0;
+          traitsSelect.selectedIndex = -1;
+          starCheckbox.checked = false;
+          customSizeInput.value = "";
+          resetOutputs();
+        }
+
+        function handleCalculate() {
+          errorBox.classList.add("hidden");
+          errorBox.textContent = "";
+
+          const brainrotName = brainrotSelect.value;
+          if (!brainrotName) {
+            errorBox.classList.remove("hidden");
+            errorBox.textContent = "Please select a brainrot.";
+            return;
+          }
+
+          let level = Number(levelInput.value);
+          if (!Number.isFinite(level) || level < 1 || level > 275) {
+            errorBox.classList.remove("hidden");
+            errorBox.textContent = "Level must be between 1 and 275.";
+            return;
+          }
+          level = Math.floor(level);
+
+          const baseEntry = baseIncomeData.find(
+            (e) => e.name === brainrotName && e.base_income != null
+          );
+          if (!baseEntry) {
+            errorBox.classList.remove("hidden");
+            errorBox.textContent =
+              "Base income not found for the selected brainrot.";
+            return;
+          }
+
+          const baseIncome = Number(baseEntry.base_income);
+          const levelIncome = computeLevelIncome(baseIncome, level);
+
+          // Size multiplier: prefer custom size value if present
+          let customSizeVal = Number(customSizeInput.value);
+          let sizeMult = 1;
+          let sizeEntry = null;
+          if (Number.isFinite(customSizeVal) && customSizeVal > 0) {
+            // Frontend failsafe: clamp only for calculation; leave input as user typed
+            const clampedSizeVal = clamp(customSizeVal, 0.25, 2.0);
+            sizeMult = multiplierFromSizeValue(clampedSizeVal);
+          } else {
+            const sizeName = sizeSelect.value;
+            sizeEntry = sizesData.find((s) => s.name === sizeName) || null;
+            sizeMult = computeSizeMultiplier(sizeEntry);
+          }
+          // Backend failsafe: cap size multiplier at 2.00 no matter what
+          sizeMult = Math.min(2, sizeMult);
+
+          const mutationName = mutationSelect.value;
+          const mutationEntry = mutationEntries.find(
+            (m) => m.name === mutationName
+          );
+          const mutationMult = mutationEntry
+            ? Number(mutationEntry.multiplier)
+            : 1;
+
+          const selectedTraits = Array.from(traitsSelect.selectedOptions).map(
+            (o) => o.value
+          );
+          let traitsMult = 1;
+          for (const name of selectedTraits) {
+            const t = traitEntries.find((tt) => tt.name === name);
+            if (t) traitsMult *= Number(t.multiplier);
+          }
+
+          const starMult =
+            starCheckbox.checked && starEntry
+              ? Number(starEntry.multiplier)
+              : 1;
+
+          const baseMult = mutationMult * traitsMult * sizeMult;
+          const effectiveBaseMult =
+            !Number.isFinite(baseMult) || baseMult <= 0 ? 1 : baseMult;
+
+          const withoutStarRaw = levelIncome * effectiveBaseMult;
+          const finalRaw =
+            withoutStarRaw * (Number.isFinite(starMult) ? starMult : 1);
+
+          const formattedNoStar = formatWithUnit(withoutStarRaw);
+          const formatted = formatWithUnit(finalRaw);
+          const formattedLevel = formatWithUnit(levelIncome);
+          const levelTrunc2 = trunc2(formattedLevel.value);
+          const finalNoStarRound2 =
+            Math.round(formattedNoStar.value * 100) / 100;
+          const finalWithStarRound2 =
+            Math.round(formatted.value * 100) / 100;
+
+          baseIncomeDisplay.textContent =
+            baseIncome.toLocaleString("en-US", {
+              maximumFractionDigits: 2,
+            }) + " /s";
+
+          levelIncomeDisplay.textContent =
+            formatFixed(levelTrunc2, 2) +
+            (formattedLevel.unit ? " " + formattedLevel.unit : "") +
+            " & " +
+            formatFixed(formattedLevel.value, 4) +
+            (formattedLevel.unit ? " " + formattedLevel.unit : "");
+
+          const combinedMult =
+            effectiveBaseMult * (Number.isFinite(starMult) ? starMult : 1);
+          sizeMultDisplay.textContent = sizeMult.toFixed(4);
+          mutationMultDisplay.textContent = mutationMult.toFixed(4);
+          traitsMultDisplay.textContent = traitsMult.toFixed(4);
+          totalMultiplierDisplay.textContent =
+            trunc2(combinedMult).toLocaleString("en-US", {
+              maximumFractionDigits: 3,
+            }) + "×";
+
+          finalDisplay.textContent =
+            formatFixed(finalNoStarRound2, 2) +
+            (formattedNoStar.unit ? " " + formattedNoStar.unit : "") +
+            " / " +
+            formatFixed(finalWithStarRound2, 2) +
+            (formatted.unit ? " " + formatted.unit : "");
+
+          const headlineValue = starCheckbox.checked
+            ? finalWithStarRound2
+            : finalNoStarRound2;
+          resultValue.textContent = formatFixed(headlineValue, 2);
+
+          if (formatted.unit) {
+            resultUnitPill.style.display = "inline-flex";
+            resultUnitPill.textContent = formatted.unit;
+          } else {
+            resultUnitPill.style.display = "none";
+          }
+
+          resultSub.textContent =
+            brainrotName +
+            " · Level " +
+            level +
+            (sizeEntry ? " · " + sizeEntry.name + " size" : "") +
+            (mutationEntry ? " · " + mutationEntry.name + " mutation" : "") +
+            (selectedTraits.length
+              ? " · Traits: " + selectedTraits.join(", ")
+              : "") +
+            (starCheckbox.checked ? " · Star active" : "");
+        }
+
+        calculateBtn.addEventListener("click", handleCalculate);
+        resetBtn.addEventListener("click", handleReset);
+        brainrotSearch.addEventListener("input", handleBrainrotSearch);
+
+        resetOutputs();
+      }
+
+      // === Size calculator wiring (adapted from brainrot-size-calculator.html) ===
+      function initSizeCalculator() {
+        const brainrotSearch = document.getElementById("size-brainrot-search");
+        const brainrotSelect = document.getElementById("size-brainrot-select");
+        const levelInput = document.getElementById("size-level-input");
+        const mutationSelect = document.getElementById("size-mutation-select");
+        const traitsSelect = document.getElementById("size-traits-select");
+        const starCheckbox = document.getElementById("size-star-checkbox");
+
+        const displayValueInput = document.getElementById(
+          "size-display-value-input"
+        );
+        const displayUnitSelect = document.getElementById(
+          "size-display-unit-select"
+        );
+        const sizeTitleSelect = document.getElementById("size-title-select");
+
+        const sizeName = document.getElementById("size-name");
+        const sizeValueMain4dp = document.getElementById("size-value-main-4dp");
+        const sizeAlt = document.getElementById("size-alt");
+
+        const errorBox = document.getElementById("size-error-box");
+        const calcSizeBtn = document.getElementById("size-calc-btn");
+        const resetBtn = document.getElementById("size-reset-btn");
+
+        let baseIncomeData = BASE_INCOME_DATA.slice();
+        let multipliersData = MULTIPLIERS_DATA.slice();
+        let sizesData = SIZES_DATA.slice();
+        let unitsData = UNITS_DATA.slice();
+
+        // Populate brainrots grouped by rarity
+        const byRarity = {};
+        for (const entry of baseIncomeData) {
+          if (entry.base_income == null) continue;
+          const rarity = entry.rarity || "Unknown";
+          if (!byRarity[rarity]) byRarity[rarity] = [];
+          byRarity[rarity].push(entry);
+        }
+        for (const rarity of Object.keys(byRarity)) {
+          byRarity[rarity].sort((a, b) =>
+            a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
+          );
+        }
+        brainrotSelect.innerHTML = '<option value="">Select brainrot...</option>';
+        Object.keys(byRarity)
+          .sort()
+          .forEach((rarity) => {
+            const group = document.createElement("optgroup");
+            group.label = rarity;
+            for (const entry of byRarity[rarity]) {
+              const opt = document.createElement("option");
+              opt.value = entry.name;
+              opt.textContent = entry.name;
+              group.appendChild(opt);
+            }
+            brainrotSelect.appendChild(group);
+          });
+
+        // Units
+        displayUnitSelect.innerHTML =
+          '<option value="">Select unit...</option>';
+        for (const u of unitsData) {
+          const opt = document.createElement("option");
+          opt.value = u.name;
+          opt.textContent = u.name;
+          displayUnitSelect.appendChild(opt);
+        }
+
+        // Optional in-game size title chooser (helps disambiguate small/big)
+        if (sizeTitleSelect) {
+          // Keep the first option ("Auto") and append titles from data
+          for (const s of sizesData) {
+            const opt = document.createElement("option");
+            opt.value = s.name;
+            opt.textContent = s.name;
+            sizeTitleSelect.appendChild(opt);
+          }
+        }
+
+        // Mutations, traits, star
+        const mutationEntries = multipliersData.filter(
+          (m) => m.type === "Mutation"
+        );
+        const traitEntries = multipliersData.filter((m) => m.type === "Trait");
+        const starEntry = multipliersData.find(
+          (m) => m.type === "Modifier" && m.name === "Star"
+        );
+
+        mutationSelect.innerHTML = "";
+        for (const m of mutationEntries) {
+          const opt = document.createElement("option");
+          opt.value = m.name;
+          opt.textContent = `${m.name} (${m.multiplier}x)`;
+          mutationSelect.appendChild(opt);
+        }
+
+        traitsSelect.innerHTML = "";
+        for (const t of traitEntries) {
+          const opt = document.createElement("option");
+          opt.value = t.name;
+          opt.textContent = `${t.name} (${t.multiplier}x)`;
+          traitsSelect.appendChild(opt);
+        }
+
+        function handleBrainrotSearch() {
+          const query = brainrotSearch.value.trim().toLowerCase();
+          if (!query) return;
+          const options = brainrotSelect.querySelectorAll("option");
+          for (const opt of options) {
+            if (!opt.value) continue;
+            if (opt.textContent.toLowerCase().includes(query)) {
+              brainrotSelect.value = opt.value;
+              break;
+            }
+          }
+        }
+
+        function resetOutputs() {
+          errorBox.classList.add("hidden");
+          errorBox.textContent = "";
+          sizeName.textContent = "";
+          if (sizeValueMain4dp) sizeValueMain4dp.textContent = "–";
+          sizeAlt.textContent = "";
+        }
+
+        function handleReset() {
+          brainrotSelect.value = "";
+          brainrotSearch.value = "";
+          levelInput.value = 1;
+          mutationSelect.selectedIndex = 0;
+          traitsSelect.selectedIndex = -1;
+          starCheckbox.checked = false;
+          displayValueInput.value = "";
+          displayUnitSelect.value = "";
+          if (sizeTitleSelect) sizeTitleSelect.value = "";
+          resetOutputs();
+        }
+
+        function handleCalculateSize() {
+          resetOutputs();
+
+          const brainrotName = brainrotSelect.value;
+          if (!brainrotName) {
+            errorBox.classList.remove("hidden");
+            errorBox.textContent = "Select a brainrot first.";
+            return;
+          }
+
+          let level = Number(levelInput.value);
+          if (!Number.isFinite(level) || level < 1 || level > 275) {
+            errorBox.classList.remove("hidden");
+            errorBox.textContent = "Level must be between 1 and 275.";
+            return;
+          }
+          level = Math.floor(level);
+
+          const baseEntry = baseIncomeData.find(
+            (e) => e.name === brainrotName && e.base_income != null
+          );
+          if (!baseEntry) {
+            errorBox.classList.remove("hidden");
+            errorBox.textContent =
+              "Base income not found for the selected brainrot.";
+            return;
+          }
+
+          const baseIncome = Number(baseEntry.base_income);
+          const levelIncome = computeLevelIncome(baseIncome, level);
+          if (!Number.isFinite(levelIncome) || levelIncome <= 0) {
+            errorBox.classList.remove("hidden");
+            errorBox.textContent =
+              "Could not compute level-scaled income for this brainrot.";
+            return;
+          }
+
+          const mutationName = mutationSelect.value;
+          const mutationEntry = mutationEntries.find(
+            (m) => m.name === mutationName
+          );
+          const mutationMult = mutationEntry
+            ? Number(mutationEntry.multiplier)
+            : 1;
+
+          const selectedTraits = Array.from(traitsSelect.selectedOptions).map(
+            (o) => o.value
+          );
+          let traitsMult = 1;
+          for (const name of selectedTraits) {
+            const t = traitEntries.find((tt) => tt.name === name);
+            if (t) traitsMult *= Number(t.multiplier);
+          }
+
+          const starMult =
+            starCheckbox.checked && starEntry
+              ? Number(starEntry.multiplier)
+              : 1;
+
+          const displayedVal = Number(displayValueInput.value);
+          if (!Number.isFinite(displayedVal) || displayedVal <= 0) {
+            errorBox.classList.remove("hidden");
+            errorBox.textContent =
+              "Enter the income value you see in-game (e.g. 469.89).";
+            return;
+          }
+
+          const unitName = displayUnitSelect.value;
+          const unitIndex = unitsData.findIndex((u) => u.name === unitName);
+          if (unitIndex === -1) {
+            errorBox.classList.remove("hidden");
+            errorBox.textContent =
+              "Select the correct unit that appears next to the number in-game.";
+            return;
+          }
+
+          const baseFactor = 1000;
+          let rawFromDisplay = displayedVal;
+          for (let i = 0; i < unitIndex; i++) {
+            rawFromDisplay *= baseFactor;
+          }
+
+          const otherMult = mutationMult * traitsMult * starMult;
+          const denom = levelIncome * otherMult;
+          if (!Number.isFinite(denom) || denom <= 0) {
+            errorBox.classList.remove("hidden");
+            errorBox.textContent =
+              "Could not infer size from the provided values.";
+            return;
+          }
+
+          const estSizeMult = rawFromDisplay / denom;
+          const matches = inferSizeFromMultiplier(estSizeMult);
+          if (!matches.length) {
+            sizeName.textContent = "";
+            if (sizeValueMain4dp) {
+              sizeValueMain4dp.textContent =
+                trunc2(estSizeMult).toFixed(4) + " (multiplier)";
+            }
+            sizeAlt.textContent = "";
+            return;
+          }
+
+          const smallMatches = matches.filter((m) => Number(m.sizeValue) < 1);
+          const bigMatches = matches.filter((m) => Number(m.sizeValue) >= 1);
+
+          const desiredTitle = sizeTitleSelect ? sizeTitleSelect.value : "";
+          const desiredMatch = desiredTitle
+            ? matches.find((m) => m.size && m.size.name === desiredTitle)
+            : null;
+          const primary =
+            desiredMatch || bigMatches[0] || smallMatches[0] || matches[0];
+
+          const roundTo = (num, decimals) => {
+            const p = 10 ** decimals;
+            return Math.round(num * p) / p;
+          };
+          const fmtSize = (v) => {
+            const n = Number(v);
+            return {
+              v4: n.toFixed(4),
+              v2: roundTo(n, 2).toFixed(2),
+              v1: roundTo(n, 1).toFixed(1),
+            };
+          };
+
+          sizeName.textContent = primary.size.name;
+          const pFmt = fmtSize(primary.sizeValue);
+          if (sizeValueMain4dp) sizeValueMain4dp.textContent = pFmt.v4;
+
+          const makePill = (label, value) => {
+            const pill = document.createElement("span");
+            pill.className =
+              "inline-flex items-center rounded-full border border-slate-700 bg-slate-950 px-2 py-0.5 text-[10px] text-slate-300";
+            const lab = document.createElement("span");
+            lab.className = "text-slate-500 mr-1";
+            lab.textContent = label;
+            const val = document.createElement("span");
+            val.textContent = value;
+            pill.appendChild(lab);
+            pill.appendChild(val);
+            return pill;
+          };
+
+          const renderAltRow = (tag, match) => {
+            const row = document.createElement("div");
+            row.className =
+              "flex flex-wrap items-center gap-x-2 gap-y-1 py-1";
+
+            const left = document.createElement("span");
+            left.className = "text-[11px] text-slate-400";
+            left.textContent = `${tag} ≈`;
+
+            const v = document.createElement("span");
+            v.className = "font-semibold text-slate-200";
+            v.textContent = `${fmtSize(match.sizeValue).v4}x`;
+
+            const chips = document.createElement("span");
+            chips.className = "inline-flex items-center gap-1.5";
+            const f = fmtSize(match.sizeValue);
+            chips.appendChild(makePill("2dp", f.v2));
+            chips.appendChild(makePill("1dp", f.v1));
+
+            const meta = document.createElement("span");
+            meta.className = "text-[11px] text-slate-400";
+            meta.textContent = `${match.size.name} · ${trunc2(match.multiplier).toFixed(2)}×`;
+
+            row.appendChild(left);
+            row.appendChild(v);
+            row.appendChild(chips);
+            row.appendChild(meta);
+            return row;
+          };
+
+          // Replace dense inline text with readable stacked rows
+          sizeAlt.textContent = "";
+          if (smallMatches.length || bigMatches.length) {
+            sizeAlt.className = "text-[11px] text-slate-400 space-y-0.5";
+          }
+          if (smallMatches.length) sizeAlt.appendChild(renderAltRow("Small", smallMatches[0]));
+          if (bigMatches.length) sizeAlt.appendChild(renderAltRow("Big", bigMatches[0]));
+        }
+
+        calcSizeBtn.addEventListener("click", handleCalculateSize);
+        resetBtn.addEventListener("click", handleReset);
+        brainrotSearch.addEventListener("input", handleBrainrotSearch);
+
+        resetOutputs();
+      }
+
+      // === Tabs + bootstrap ===
+      (function setupTabsAndInit() {
+        const tabs = [
+          { btn: document.getElementById("tab-income"), panel: "panel-income" },
+          { btn: document.getElementById("tab-size"), panel: "panel-size" },
+        ];
+
+        tabs.forEach(({ btn }) => {
+          btn.addEventListener("click", () => {
+            tabs.forEach(({ btn: b, panel }) => {
+              const el = document.getElementById(panel);
+              const isActive = b === btn;
+              b.classList.toggle("tab-active", isActive);
+              b.classList.toggle("tab-inactive", !isActive);
+              b.setAttribute("aria-selected", String(isActive));
+              if (el) el.classList.toggle("hidden", !isActive);
+            });
+          });
+        });
+
+        // Initialize both calculators once (they only read DOM and attach handlers)
+        initIncomeCalculator();
+        initSizeCalculator();
+      })();
+    </script>
+  </body>
+</html>
+
